@@ -1,0 +1,3 @@
+kubectl label namespace openunison istio-injection=enabled
+kubectl get secret ou-tls-certificate -n openunison -o yaml | sed 's/namespace[:] openunison/namespace: istio-system/g' | kubectl create -f -
+kubectl patch deployments istio-ingressgateway -n istio-system -p '{"spec":{"template":{"spec":{"containers":[{"name":"istio-proxy","ports":[{"containerPort":15021,"protocol":"TCP"},{"containerPort":8080,"hostPort":80,"protocol":"TCP"},{"containerPort":8443,"hostPort":443,"protocol":"TCP"},{"containerPort":31400,"protocol":"TCP"},{"containerPort":15443,"protocol":"TCP"},{"containerPort":15090,"name":"http-envoy-prom","protocol":"TCP"}]}]}}}}'
